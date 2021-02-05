@@ -41,8 +41,8 @@ dokka {
     configuration {
         externalDocumentationLink {
             noAndroidSdkLink = true
-            url = new URL("https://github.com/ShowMeThe/kinit/blob/master/package-list")
-            packageListUrl = new URL("https://github.com/ShowMeThe/kinit/blob/master/package-list")
+            url = new URL("https://github.com/ShowMeThe/Kinject/blob/master/package-list")
+            packageListUrl = new URL("https://github.com/ShowMeThe/Kinject/blob/master/package-list")
         }
     }
 }
