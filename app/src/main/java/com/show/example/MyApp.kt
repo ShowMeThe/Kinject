@@ -1,7 +1,7 @@
 package com.show.example
 
 import android.app.Application
-
+import com.show.kInject.core.initScope
 
 
 /**
@@ -13,8 +13,6 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-
 
 
 

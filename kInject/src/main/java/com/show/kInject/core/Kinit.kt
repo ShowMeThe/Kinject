@@ -32,7 +32,7 @@ class Components {
 
     inline fun <reified T>single(typeName:String = T::class.java.name,single: ()->T){
         GlobalRegister.instant.addEntry(StringQualifier().apply {
-            setKeyName(T::class.java.name)
+            setKeyName(typeName)
         },single())
     }
 

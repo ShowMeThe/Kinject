@@ -3,6 +3,7 @@ package com.show.example
 import android.os.Bundle
 import android.util.Log
 import com.show.kInject.core.Logger
+import com.show.kInject.core.ext.single
 import com.show.kInject.core.initScope
 import com.show.kInject.lifecyleowner.module.lifeModule
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,8 +25,9 @@ class MainActivity : BaseActivity<MainViewModel>() {
         }
 
         btn.setOnClickListener {
-            val out =  viewModel.repository
-            Log.e("222222","$out")
+            val data1 by single<String>()
+            val data2 by single<String>("data")
+            Log.e("2222222","$data1 $data2")
         }
 
 
