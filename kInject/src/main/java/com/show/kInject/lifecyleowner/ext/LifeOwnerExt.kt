@@ -14,9 +14,15 @@ import com.show.kInject.core.register.ModuleRegister
 inline fun <reified T> getLifeOwner(scopeClazz: T) : LifecycleOwner {
     return ModuleRegister.instant.getEntry(StringQualifier().apply {
         setKeyName(scopeClazz.toString())
-        setTypeName(T::class.java.name)
         Logger.log("inject Qualifier ${this}")
     })?.get(scopeClazz.toString()) as LifecycleOwner
+}
+
+inline fun <reified T> getLifeOwnerOrNull(scopeClazz: T) : LifecycleOwner? {
+    return ModuleRegister.instant.getEntry(StringQualifier().apply {
+        setKeyName(scopeClazz.toString())
+        Logger.log("inject Qualifier ${this}")
+    })?.get(scopeClazz.toString()) as LifecycleOwner?
 }
 
 
@@ -24,7 +30,6 @@ inline fun <reified T> injectLifeOwner(scopeClazz: T) : Lazy<LifecycleOwner> {
     return lazy {
         ModuleRegister.instant.getEntry(StringQualifier().apply {
             setKeyName(scopeClazz.toString())
-            setTypeName(T::class.java.name)
             Logger.log("inject Qualifier ${this}")
         })?.get(scopeClazz.toString()) as LifecycleOwner
     }

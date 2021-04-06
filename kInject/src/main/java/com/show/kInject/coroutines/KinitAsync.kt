@@ -52,7 +52,6 @@ class AsyncComponents  {
     inline fun <reified T>singleAsync(typeName:String = T::class.java.name, crossinline single:()->T){
         GlobalScope.launch(fixedThread) {
             GlobalRegister.instant.addEntry(StringQualifier().apply {
-                setTypeName(typeName)
                 setKeyName(T::class.java.name)
             },single.invoke())
         }
@@ -63,7 +62,6 @@ class AsyncComponents  {
         GlobalScope.launch(fixedThread) {
             val module = scope()
             ModuleRegister.instant.addEntry(StringQualifier().apply {
-                setTypeName(scopeClazz::class.java.name)
                 setKeyName(scopeClazz.toString())
                 Logger.log("inject into clazz ${scopeClazz::class.java}")
             },module)
@@ -77,7 +75,6 @@ class AsyncComponents  {
              withContext(fixedThread){
                  val module = scope()
                  ModuleRegister.instant.addEntry(StringQualifier().apply {
-                     setTypeName(scopeClazz::class.java.name)
                      setKeyName(scopeClazz.toString())
                      Logger.log("inject into clazz ${scopeClazz::class.java}")
                  },module)

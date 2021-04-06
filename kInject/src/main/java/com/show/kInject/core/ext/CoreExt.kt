@@ -14,15 +14,13 @@ import com.show.kInject.core.register.ModuleRegister
 inline fun <reified T> single(typeName: String = T::class.java.name): Lazy<T> =
     lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
         GlobalRegister.instant.getEntry(StringQualifier().apply {
-            setKeyName(T::class.java.name)
-            setTypeName(typeName)
+            setKeyName(typeName)
         }) as T
     }
 
 inline fun <reified T> getSingle(typeName: String = T::class.java.name): T =
     GlobalRegister.instant.getEntry(StringQualifier().apply {
-        setKeyName(T::class.java.name)
-        setTypeName(typeName)
+        setKeyName(typeName)
     }) as T
 
 
@@ -30,7 +28,6 @@ inline fun <reified T> inject(scopeClazz: Any, groupName: String = T::class.java
     return lazy {
         ModuleRegister.instant.getEntry(StringQualifier().apply {
             setKeyName("$scopeClazz")
-            setTypeName(scopeClazz::class.java.name)
             Logger.log("inject Qualifier ${this}")
         })?.get(groupName) as T
     }
@@ -39,6 +36,5 @@ inline fun <reified T> inject(scopeClazz: Any, groupName: String = T::class.java
 inline fun <reified T> getInject(scopeClazz: Any, groupName: String = T::class.java.name): T = ModuleRegister.instant.getEntry(
     StringQualifier().apply {
     setKeyName("$scopeClazz")
-    setTypeName(scopeClazz::class.java.name)
     Logger.log("inject Qualifier ${this}")
 })?.get(groupName) as T

@@ -15,4 +15,7 @@ class MainRepository(owner: LifecycleOwner?) : BaseRepository(owner) {
         Log.e("222222","LifecycleOwner $owner")
     }
 
+
+
+
 }

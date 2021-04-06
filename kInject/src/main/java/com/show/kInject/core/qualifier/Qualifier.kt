@@ -11,37 +11,27 @@ open class Qualifier<D> {
 
     private var key : D? = null
 
-    private var typeName:String? = ""
-
-    fun setTypeName(typeName: String?){
-        this.typeName = typeName
-    }
-
-    fun getTypeName() = typeName
     fun getKey() = key
 
     fun setKeyName(key:D){
         this.key = key
     }
 
-    inline fun<reified T> Qualifier<*>.makeTypeName(){
-        setTypeName(T::class.java.name)
-    }
 
     override fun hashCode(): Int {
-        return getKey().hashCode() + getTypeName().hashCode()
+        return getKey().hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
         return if(other is Qualifier<*>){
-            other.key == this.key && other.typeName == this.typeName
+            other.key == this.key
         }else{
             false
         }
     }
 
     override fun toString(): String {
-        return "Qualifier[Key:${key},TypeName:${typeName}]"
+        return "Qualifier[Key:${key}]"
     }
 
 }

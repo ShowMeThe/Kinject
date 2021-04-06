@@ -32,7 +32,6 @@ class Components {
 
     inline fun <reified T>single(typeName:String = T::class.java.name,single: ()->T){
         GlobalRegister.instant.addEntry(StringQualifier().apply {
-            setTypeName(typeName)
             setKeyName(T::class.java.name)
         },single())
     }
@@ -42,7 +41,6 @@ class Components {
      */
     fun <T :Any>module(scopeClazz:T,module: Module){
         ModuleRegister.instant.addEntry(StringQualifier().apply {
-            setTypeName(scopeClazz::class.java.name)
             setKeyName(scopeClazz.toString())
             Logger.log("inject into clazz ${scopeClazz::class.java}")
         },module)
