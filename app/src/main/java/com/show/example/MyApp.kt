@@ -14,7 +14,9 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-
+        initScope {
+            androidContext(this@MyApp)
+        }
 
     }
 }

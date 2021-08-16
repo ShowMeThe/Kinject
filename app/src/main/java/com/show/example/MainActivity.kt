@@ -3,6 +3,8 @@ package com.show.example
 import android.os.Bundle
 import android.util.Log
 import com.show.kInject.core.Logger
+import com.show.kInject.core.ext.androidContext
+import com.show.kInject.core.ext.androidContextNotNull
 import com.show.kInject.core.ext.single
 import com.show.kInject.core.initScope
 import com.show.kInject.lifecyleowner.module.lifeModule
@@ -25,9 +27,9 @@ class MainActivity : BaseActivity<MainViewModel>() {
         }
 
         btn.setOnClickListener {
-            val data1 by single<String>()
-            val data2 by single<String>("data")
-            Log.e("2222222","$data1 $data2")
+            val context = androidContext()
+            val context2 = androidContextNotNull()
+            Log.e("2222222", "value = $context value2 = $context2")
         }
 
 
