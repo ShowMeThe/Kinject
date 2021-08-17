@@ -1,4 +1,4 @@
-## What is Kinit?
+## What is KInject?
 a lightweight injection framework for Android developer using Kotlin 
 
 This framework written in Kotlin 
