@@ -5,4 +5,4 @@ package com.show.example
  *  2020/6/20
  *  18:03
  */
-data class Main(var data:String)
+class Main(var data:String)

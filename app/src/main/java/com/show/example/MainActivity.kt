@@ -3,9 +3,7 @@ package com.show.example
 import android.os.Bundle
 import android.util.Log
 import com.show.kInject.core.Logger
-import com.show.kInject.core.ext.androidContext
-import com.show.kInject.core.ext.androidContextNotNull
-import com.show.kInject.core.ext.single
+import com.show.kInject.core.ext.*
 import com.show.kInject.core.initScope
 import com.show.kInject.lifecyleowner.module.lifeModule
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,9 +25,8 @@ class MainActivity : BaseActivity<MainViewModel>() {
         }
 
         btn.setOnClickListener {
-            val context = androidContext()
-            val context2 = androidContextNotNull()
-            Log.e("2222222", "value = $context value2 = $context2")
+            val main: Main = factory("1231")
+            Log.e("22222", "main == $main")
         }
 
 

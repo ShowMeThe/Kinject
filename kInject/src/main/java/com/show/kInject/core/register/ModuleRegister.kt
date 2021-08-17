@@ -29,6 +29,10 @@ class ModuleRegister private constructor(){
 
     fun getEntry(qualifier: StringQualifier) : Module? = entry[qualifier]
 
-    fun removeEntry(qualifier: Qualifier<*>) = entry.remove(qualifier)
+    fun removeEntry(qualifier: Qualifier<*>){
+        val module = entry[qualifier]
+        module?.clear()
+        entry.remove(qualifier)
+    }
 
 }

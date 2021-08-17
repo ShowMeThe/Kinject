@@ -16,6 +16,14 @@ class MyApp : Application() {
 
         initScope {
             androidContext(this@MyApp)
+
+            single("12312") { "444444" }
+
+            module("1231", com.show.kInject.core.module.module {
+                factory {
+                    Main("456")
+                }
+            })
         }
 
     }
