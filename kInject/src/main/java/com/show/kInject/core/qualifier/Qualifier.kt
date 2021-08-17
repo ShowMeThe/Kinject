@@ -19,7 +19,7 @@ open class Qualifier<D> {
 
 
     override fun hashCode(): Int {
-        return getKey().hashCode()
+        return 31 * getKey().hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
