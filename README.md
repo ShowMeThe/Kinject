@@ -1,7 +1,9 @@
 ## What is Kinit?
 a lightweight injection framework for Android developer using Kotlin 
 
-This framework written in Kotlin
+This framework written in Kotlin 
+
+The Lastest Version <img src="https://img.shields.io/badge/1.5.1--alpha-Versioin-green"/>
 
 # Dependencies
 Project build.gradle
@@ -20,70 +22,39 @@ allprojects {
 App build.gradle
 ```
 //Core
-api("com.github.ShowMeThe.kinit:kinit_core:v0.03")
-//Lifecycle-ktx
-api("com.github.ShowMeThe.kinit:kinit_lifecycle:v0.03")
+api("com.github.ShowMeThe:Kinject:${lastest version}")
 ```
 # Quickstart
 A easy Example as following:
-We create a Main.kt
+If we have a Repository like this :  
+MainRepository:
 ```
-data class Main(var data:String)
+class MainRepository(owner: LifecycleOwner?) : BaseRepository(owner)
 
 ```
-Applciation.kt
-```
- override fun onCreate() {
-        super.onCreate()
-        startInit {
-            enableLog()
-            appContext(this@MyApp)
-            single { 
-               // initialize something
-               Main("123") 
-            }
-        }
-    }
-        
-```
-Or just write it in an Activity
-```
+MainViewModel:  
 
- val module = lifeModule {
-            single(MainViewModel::class.java.name){ this@MainActivity }
-            single(Main::class.java.name) { Main("4444") }
-        }
-
-        //module add Key and module value
-        startInit {
-            module(viewModel,module)
-        }
-
-
-```
-:collision::collision: **If single contains an Activity or a Fragment,suggest using lifeModule, otherwise,it will cause Memory Leak.**
-
-MainViewModel.kt
 ```
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository by lazy {  MainRepository(lifeOwnerOrNull(this))}
 
-    private val main :Main by inject(this)
+    val repository by lazy { MainRepository(getLifeOwner(this)) }
 
-    fun get() = repository
-
-    fun getMain() = repository
 
 }
 
+```
+MainActivity:  
+```
+ initScope {
+            module(viewModel, lifeModule {
+                scopeLifeOwner(viewModel)
+            })
+        }
 
 ```
-MainRepository.kt
-```
-class MainRepository(owner: LifecycleOwner?) : BaseRepository(owner) {
-}
 
-```
-Then,it inject the LifecycleOwner in MainRepository constructor according to different `ViewModel`
+We can set the Activity LifeOwner into ViewModel，So we can get the Activity's LifeOwner in Viewmodel using method getLifeOwner.For more example see the example project
+
+
 
