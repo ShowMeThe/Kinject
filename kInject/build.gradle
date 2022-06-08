@@ -87,7 +87,8 @@ android {
 dependencies {
     compileOnly fileTree(dir: "libs", include: ["*.jar"])
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compileOnly("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha04")
+    compileOnly("androidx.lifecycle:lifecycle-common:2.4.1")
+    compileOnly("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 }
