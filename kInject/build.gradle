@@ -100,8 +100,9 @@ afterEvaluate {
     publishing{
         publications {
             release(MavenPublication){
-                groupId = "com.show.kInject"
-                artifactId = "core"
+                from components.release
+                groupId = "com.github.ShowMeThe"
+                artifactId = "Kinject"
                 version = "1.6.0"
                 artifact sourcesJar
             }
@@ -110,4 +111,4 @@ afterEvaluate {
 }
 
 //apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.ShowMeThe'
+//group='com.github.ShowMeThe'
