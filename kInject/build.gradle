@@ -95,16 +95,13 @@ dependencies {
 
 
 afterEvaluate {
-    generateReleaseBuildConfig.enabled = false
-    generateDebugBuildConfig.enabled = false
     publishing{
         publications {
             release(MavenPublication){
                 from components.release
-                groupId = "com.github.ShowMeThe"
-                artifactId = "Kinject"
+                groupId = "com.show.kInject"
+                artifactId = "KInject"
                 version = "1.6.0"
-                artifact sourcesJar
             }
         }
     }
