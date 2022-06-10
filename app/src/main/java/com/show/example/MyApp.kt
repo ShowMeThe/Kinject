@@ -2,6 +2,7 @@ package com.show.example
 
 import android.app.Application
 import com.show.kInject.core.initScope
+import com.show.kInject.core.module.moduleScope
 
 
 /**
@@ -19,7 +20,7 @@ class MyApp : Application() {
 
             single("12312") { "444444" }
 
-            module("1231", com.show.kInject.core.module.module {
+            module("1231", moduleScope {
                 factory {
                     Main("456")
                 }

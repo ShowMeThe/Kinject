@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Author: ShowMeThe
  */
 
-fun module(scope: Module.() -> Unit): Module {
+fun moduleScope(scope: Module.() -> Unit): Module {
     val moduleBean = Module()
     scope.invoke(moduleBean)
     return moduleBean

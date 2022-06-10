@@ -97,7 +97,17 @@ dependencies {
 afterEvaluate {
     generateReleaseBuildConfig.enabled = false
     generateDebugBuildConfig.enabled = false
+    publishing{
+        publications {
+            release(MavenPublication){
+                groupId = "com.show.kInject"
+                artifactId = "core"
+                version = "1.6.0"
+                artifact sourcesJar
+            }
+        }
+    }
 }
 
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.ShowMeThe'
