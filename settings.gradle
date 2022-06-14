@@ -1,3 +1,3 @@
 include ':kInject'
-//include ':app'
+include ':app'
 rootProject.name = "Kinject"

@@ -45,7 +45,7 @@ inline fun <reified T> inject(scopeClazz: Any, groupName: String = T::class.java
     }
 }
 
-inline fun <reified T> getInject(scopeClazz: Any, groupName: String = T::class.java.name): T =
+inline fun <reified T> getSingleInject(scopeClazz: Any, groupName: String = T::class.java.name): T =
     ModuleRegister.instant.getEntry(
         StringQualifier().apply {
             setKeyName("$scopeClazz")
@@ -60,8 +60,12 @@ inline fun <reified T> factory(scopeClazz: Any, groupName: String = T::class.jav
     })?.getFactory(groupName) as T
 }
 
+inline val <reified T> T.currentScope get() = T::class.java
 
-inline fun <reified T> lazyFactory(scopeClazz: Any, groupName: String = T::class.java.name): Lazy<T> {
+inline fun <reified T> lazyFactory(
+    scopeClazz: Any,
+    groupName: String = T::class.java.name
+): Lazy<T> {
     return lazy {
         ModuleRegister.instant.getEntry(StringQualifier().apply {
             setKeyName("$scopeClazz")
