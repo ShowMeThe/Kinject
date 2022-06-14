@@ -28,7 +28,6 @@ class MainActivity : BaseActivity<MainViewModel>() {
 
         btn.setOnClickListener {
             val pair = MainA("123213")
-            Logger.log("pair ${pair.hashCode()}")
             val main: Main = factory(currentScope, pair)
             Log.e("22222", "main == $main")
         }

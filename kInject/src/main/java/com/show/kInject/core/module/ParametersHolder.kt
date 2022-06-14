@@ -4,11 +4,11 @@ import kotlin.reflect.KClass
 
 class NoParameterFoundException(msg: String) : Exception(msg)
 
-open class ParametersHolder(val _values: MutableList<Any?> = mutableListOf()) {
+open class ParametersHolder(private val _values: MutableList<Any?> = mutableListOf()) {
 
 
-    open fun <T> elementAt(i: Int, clazz: KClass<*>): T? =
-        if (_values.size > i) _values[i] as T? else throw NoParameterFoundException(
+    open fun <T> elementAt(i: Int, clazz: KClass<*>): T =
+        if (_values.size > i) _values[i] as T else throw NoParameterFoundException(
             "Can't get injected parameter #$i from $this for type '${clazz::class.java.name}'"
         )
 

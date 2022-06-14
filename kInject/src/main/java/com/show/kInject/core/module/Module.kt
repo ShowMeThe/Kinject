@@ -40,34 +40,61 @@ open class Module {
         addSingle(scopeData::class.java.name, scopeData)
     }
 
-//    inline fun <reified T> factory(noinline factory: () -> T?) {
-//        addFactory(T::class.java.name, factory)
-//    }
-//
-//    fun addFactory(groupName: String, any: () -> Any?) {
-//        if (getFactoryEntry()[groupName] == null) {
-//            getFactoryEntry()[groupName] = any
-//        }
-//    }
-
-    inline fun <reified R,reified T1> factory(noinline factory: (T1) -> R?){
+    inline fun <reified R> factory(noinline factory: () -> R?) {
         val groupName = R::class.java.name
         if (getFactoryEntry()[groupName] == null) {
             getFactoryEntry()[groupName] = Definition {
-                it._values.forEach {
-                    Logger.log("factory parameter ${it}")
-                }
-                it.component1<T1?>()?.let { it1 ->
-                    Logger.log("factory parameter ${it1.hashCode()}")
-                    factory.invoke(it1)
-                }
+                factory.invoke()
             }
         }
     }
 
-    inline fun <reified R> new(
-        constructor: () -> R,
-    ): R = constructor()
+    inline fun <reified R, reified T1> factory(noinline factory: (T1?) -> R?) {
+        val groupName = R::class.java.name
+        if (getFactoryEntry()[groupName] == null) {
+            getFactoryEntry()[groupName] = Definition {
+                factory.invoke(it.component1())
+            }
+        }
+    }
+
+    inline fun <reified R, reified T1, reified T2> factory(noinline factory: (T1?, T2?) -> R?) {
+        val groupName = R::class.java.name
+        if (getFactoryEntry()[groupName] == null) {
+            getFactoryEntry()[groupName] = Definition {
+                factory.invoke(it.component1(), it.component2())
+            }
+        }
+    }
+
+    inline fun <reified R, reified T1, reified T2, reified T3> factory(noinline factory: (T1?, T2?, T3?) -> R?) {
+        val groupName = R::class.java.name
+        if (getFactoryEntry()[groupName] == null) {
+            getFactoryEntry()[groupName] = Definition {
+                factory.invoke(it.component1(), it.component2(), it.component3())
+            }
+        }
+    }
+
+    inline fun <reified R, reified T1, reified T2, reified T3, reified T4> factory(noinline factory: (T1?, T2?, T3?, T4?) -> R?) {
+        val groupName = R::class.java.name
+        if (getFactoryEntry()[groupName] == null) {
+            getFactoryEntry()[groupName] = Definition {
+                factory.invoke(it.component1(), it.component2(), it.component3(), it.component4())
+            }
+        }
+    }
+
+    inline fun <reified R, reified T1, reified T2, reified T3, reified T4, reified T5> factory(
+        noinline factory: (T1?, T2?, T3?, T4?,T5?) -> R?
+    ) {
+        val groupName = R::class.java.name
+        if (getFactoryEntry()[groupName] == null) {
+            getFactoryEntry()[groupName] = Definition {
+                factory.invoke(it.component1(), it.component2(), it.component3(), it.component4(),it.component5())
+            }
+        }
+    }
 
     /**
      * When class type are the same , distinguish them by name
@@ -86,7 +113,7 @@ open class Module {
         return getEntry()[name]
     }
 
-    fun getFactory(name: String,vararg any: Any): Any? {
+    fun getFactory(name: String, vararg any: Any?): Any? {
         return getFactoryEntry()[name]?.definition?.invoke(ParametersHolder(any.toMutableList()))
     }
 
@@ -97,7 +124,7 @@ open class Module {
     /**
      * Be careful to use it, it will clean all value
      */
-    fun clear(){
+    fun clear() {
         entryFactory.clear()
         entrySingle.clear()
     }
