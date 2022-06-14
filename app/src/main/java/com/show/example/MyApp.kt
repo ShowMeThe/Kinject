@@ -21,11 +21,8 @@ class MyApp : Application() {
             single("12312") { "444444" }
 
             module(MainActivity::class, moduleScope {
-                factory {
-                    Main("456")
-                }
-                factory {
-                    MainA("654")
+                factory<Main,MainA> { it ->
+                    Main(it)
                 }
             })
         }

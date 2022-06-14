@@ -1,5 +1,6 @@
 package com.show.kInject.core.module
 
+import com.show.kInject.core.Logger
 import com.show.kInject.core.qualifier.Qualifier
 import java.util.concurrent.ConcurrentHashMap
 
@@ -25,11 +26,11 @@ open class Module {
         }
     private val entrySingle by lazy { ConcurrentHashMap<String, Any>() }
 
-    private val entryFactory by lazy { ConcurrentHashMap<String, () -> Any?>() }
+    private val entryFactory by lazy { ConcurrentHashMap<String, Definition<*>?>() }
 
-    private fun getEntry() = entrySingle
+    fun getEntry() = entrySingle
 
-    private fun getFactoryEntry() = entryFactory
+    fun getFactoryEntry() = entryFactory
 
     /**
      * If the class type are the same , cause the data lose , Use Method {@link #scopeByName}
@@ -39,16 +40,34 @@ open class Module {
         addSingle(scopeData::class.java.name, scopeData)
     }
 
-    inline fun <reified T> factory(noinline factory: () -> T?) {
-        addFactory(T::class.java.name, factory)
-    }
+//    inline fun <reified T> factory(noinline factory: () -> T?) {
+//        addFactory(T::class.java.name, factory)
+//    }
+//
+//    fun addFactory(groupName: String, any: () -> Any?) {
+//        if (getFactoryEntry()[groupName] == null) {
+//            getFactoryEntry()[groupName] = any
+//        }
+//    }
 
-    fun addFactory(groupName: String, any: () -> Any?) {
+    inline fun <reified R,reified T1> factory(noinline factory: (T1) -> R?){
+        val groupName = R::class.java.name
         if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = any
+            getFactoryEntry()[groupName] = Definition {
+                it._values.forEach {
+                    Logger.log("factory parameter ${it}")
+                }
+                it.component1<T1?>()?.let { it1 ->
+                    Logger.log("factory parameter ${it1.hashCode()}")
+                    factory.invoke(it1)
+                }
+            }
         }
     }
 
+    inline fun <reified R> new(
+        constructor: () -> R,
+    ): R = constructor()
 
     /**
      * When class type are the same , distinguish them by name
@@ -67,8 +86,8 @@ open class Module {
         return getEntry()[name]
     }
 
-    fun getFactory(name: String): Any? {
-        return getFactoryEntry()[name]?.invoke()
+    fun getFactory(name: String,vararg any: Any): Any? {
+        return getFactoryEntry()[name]?.definition?.invoke(ParametersHolder(any.toMutableList()))
     }
 
     open fun setParentKey(qualifier: Qualifier<*>?) {

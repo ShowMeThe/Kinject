@@ -53,11 +53,11 @@ inline fun <reified T> getSingleInject(scopeClazz: Any, groupName: String = T::c
         })?.get(groupName) as T
 
 
-inline fun <reified T> factory(scopeClazz: Any, groupName: String = T::class.java.name): T {
+inline fun <reified T> factory(scopeClazz: Any,vararg parameter: Any?): T {
     return ModuleRegister.instant.getEntry(StringQualifier().apply {
         setKeyName("$scopeClazz")
         Logger.log("inject Qualifier ${this}")
-    })?.getFactory(groupName) as T
+    })?.getFactory(T::class.java.name,parameter) as T
 }
 
 inline val <reified T> T.currentScope get() = T::class.java
