@@ -1,3 +1,3 @@
 package com.show.example
 
-class MainA(var data:String)
+data class MainA(var data:String)

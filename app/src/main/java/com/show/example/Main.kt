@@ -5,4 +5,4 @@ package com.show.example
  *  2020/6/20
  *  18:03
  */
-class Main(var data:String)
+data class Main(var data: String? = null , val int: Int? = null, val double: Double? = null)

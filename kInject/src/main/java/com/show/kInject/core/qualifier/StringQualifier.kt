@@ -6,6 +6,4 @@ package com.show.kInject.core.qualifier
 * Author: ShowMeThe
 */
 
-class StringQualifier : Qualifier<String>() {
-
-}
+class StringQualifier : Qualifier<String>()
