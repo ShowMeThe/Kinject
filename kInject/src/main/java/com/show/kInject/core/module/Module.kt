@@ -3,6 +3,7 @@ package com.show.kInject.core.module
 import com.show.kInject.core.Logger
 import com.show.kInject.core.qualifier.Qualifier
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KClass
 
 /**
  * PackageName : com.show.kinit_core.module
@@ -26,7 +27,7 @@ open class Module {
         }
     private val entrySingle by lazy { ConcurrentHashMap<String, Any>() }
 
-    private val entryFactory by lazy { ConcurrentHashMap<String, Definition<*>?>() }
+    private val entryFactory by lazy { ConcurrentHashMap<FactoryInstant<*>, Definition<*>?>() }
 
     fun getEntry() = entrySingle
 
@@ -41,58 +42,57 @@ open class Module {
     }
 
     inline fun <reified R> factory(noinline factory: () -> R?) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke()
-            }
+        val factoryInstant = _createFactory<R>(resultType = R::class)
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke()
         }
     }
 
     inline fun <reified R, reified T1> factory(noinline factory: (T1?) -> R?) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke(it.component1())
-            }
+        val factoryInstant = _createFactory<R>(arrayListOf(T1::class), R::class)
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke(it.component1())
         }
     }
 
     inline fun <reified R, reified T1, reified T2> factory(noinline factory: (T1?, T2?) -> R?) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke(it.component1(), it.component2())
-            }
+        val factoryInstant = _createFactory<R>(arrayListOf(T1::class, T2::class), R::class)
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke(it.component1(), it.component2())
         }
     }
 
     inline fun <reified R, reified T1, reified T2, reified T3> factory(noinline factory: (T1?, T2?, T3?) -> R?) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke(it.component1(), it.component2(), it.component3())
-            }
+        val factoryInstant =
+            _createFactory<R>(arrayListOf(T1::class, T2::class, T3::class), R::class)
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke(it.component1(), it.component2(), it.component3())
         }
     }
 
     inline fun <reified R, reified T1, reified T2, reified T3, reified T4> factory(noinline factory: (T1?, T2?, T3?, T4?) -> R?) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke(it.component1(), it.component2(), it.component3(), it.component4())
-            }
+        val factoryInstant =
+            _createFactory<R>(arrayListOf(T1::class, T2::class, T3::class, T4::class), R::class)
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke(it.component1(), it.component2(), it.component3(), it.component4())
         }
     }
 
     inline fun <reified R, reified T1, reified T2, reified T3, reified T4, reified T5> factory(
-        noinline factory: (T1?, T2?, T3?, T4?,T5?) -> R?
+        noinline factory: (T1?, T2?, T3?, T4?, T5?) -> R?
     ) {
-        val groupName = R::class.java.name
-        if (getFactoryEntry()[groupName] == null) {
-            getFactoryEntry()[groupName] = Definition {
-                factory.invoke(it.component1(), it.component2(), it.component3(), it.component4(),it.component5())
-            }
+        val factoryInstant = _createFactory<R>(
+            arrayListOf(T1::class, T2::class, T3::class, T4::class, T5::class),
+            R::class
+        )
+        getFactoryEntry()[factoryInstant] = Definition {
+            factory.invoke(
+                it.component1(),
+                it.component2(),
+                it.component3(),
+                it.component4(),
+                it.component5()
+            )
         }
     }
 
@@ -113,8 +113,12 @@ open class Module {
         return getEntry()[name]
     }
 
-    fun getFactory(name: String, vararg any: Any?): Any? {
-        return getFactoryEntry()[name]?.definition?.invoke(ParametersHolder(any.toMutableList()))
+    inline fun <reified R> getFactory(resultType: KClass<*>, vararg parameters: Any?): Any? {
+        val parameterList = parameters.toMutableList()
+        val secondaryTypes = parameterList.toClazzList
+        return getFactoryEntry()[_createFactory<R>(secondaryTypes, resultType)]?.parameter?.invoke(
+            ParametersHolder(parameterList)
+        )
     }
 
     open fun setParentKey(qualifier: Qualifier<*>?) {
@@ -129,3 +133,20 @@ open class Module {
         entrySingle.clear()
     }
 }
+
+
+inline fun <reified R> _createFactory(
+    secondaryTypes: List<KClass<*>?> = emptyList(),
+    resultType: KClass<*>
+): FactoryInstant<R> {
+    return FactoryInstant(secondaryTypes, resultType)
+}
+
+inline val MutableList<Any?>.toClazzList
+    get() = this.map {
+        if (it != null) {
+            it::class
+        } else {
+            null
+        }
+    }

@@ -21,8 +21,16 @@ class MyApp : Application() {
             single("12312") { "444444" }
 
             module(MainActivity::class, moduleScope {
-                factory<Main,MainA> { it ->
+                factory<Main,String> { it ->
                     Main(it)
+                }
+
+                factory<Main,String,Int> { it,it1 ->
+                    Main(it,it1)
+                }
+
+                factory<Main,String,Int,Double> { it,it1,it2 ->
+                    Main(it,it1,it2)
                 }
             })
         }

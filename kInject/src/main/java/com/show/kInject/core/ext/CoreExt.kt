@@ -6,6 +6,7 @@ import com.show.kInject.core.Logger
 import com.show.kInject.core.qualifier.StringQualifier
 import com.show.kInject.core.register.GlobalRegister
 import com.show.kInject.core.register.ModuleRegister
+import kotlin.reflect.KClass
 
 /**
  *  com.show.kinit_core.ext
@@ -57,19 +58,18 @@ inline fun <reified T> factory(scopeClazz: Any,vararg parameter: Any?): T {
     return ModuleRegister.instant.getEntry(StringQualifier().apply {
         setKeyName("$scopeClazz")
         Logger.log("inject Qualifier $this")
-    })?.getFactory(T::class.java.name,*parameter) as T
+    })?.getFactory<T>(T::class,*parameter) as T
 }
 
 inline val <reified T> T.currentScope get() = T::class.java
 
 inline fun <reified T> lazyFactory(
     scopeClazz: Any,
-    groupName: String = T::class.java.name
 ): Lazy<T> {
     return lazy {
         ModuleRegister.instant.getEntry(StringQualifier().apply {
             setKeyName("$scopeClazz")
             Logger.log("inject Qualifier $this")
-        })?.getFactory(groupName) as T
+        })?.getFactory<T>(T::class) as T
     }
 }
