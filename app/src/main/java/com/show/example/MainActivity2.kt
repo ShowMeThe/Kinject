@@ -1,9 +1,8 @@
 package com.show.example
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.show.kInject.core.ext.currentScope
+import androidx.appcompat.app.AppCompatActivity
 import com.show.kInject.core.ext.factory
 import kotlinx.android.synthetic.main.activity_main2.*
 
@@ -14,11 +13,8 @@ class MainActivity2 : AppCompatActivity() {
 
 
         btn.setOnClickListener {
-            val main: Main? = factory(currentScope)
+            val main: MainA? = factory("123", "12312")
             Log.e("22222", "main == $main")
-
-            val maina: MainA? = factory(currentScope)
-            Log.e("22222", "maina == $maina")
         }
 
     }

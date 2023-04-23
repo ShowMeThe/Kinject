@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
 /**
- * PackageName : com.show.kinit_core.module
  * Date: 2020/12/18
  * Author: ShowMeThe
  */
@@ -20,26 +19,14 @@ fun moduleScope(scope: Module.() -> Unit): Module {
 
 open class Module {
 
-    var qualifier: Qualifier<*>? = null
-        set(value) {
-            field = value
-            setParentKey(field)
-        }
     private val entrySingle by lazy { ConcurrentHashMap<String, Any>() }
-
     private val entryFactory by lazy { ConcurrentHashMap<FactoryInstant<*>, Definition<*>?>() }
 
-    fun getEntry() = entrySingle
+    private fun getEntry() = entrySingle
 
     fun getFactoryEntry() = entryFactory
 
-    /**
-     * If the class type are the same , cause the data lose , Use Method {@link #scopeByName}
-     */
-    fun scope(single: () -> Any) {
-        val scopeData = single()
-        addSingle(scopeData::class.java.name, scopeData)
-    }
+
 
     inline fun <reified R> factory(noinline factory: () -> R?) {
         val factoryInstant = _createFactory<R>(resultType = R::class)
@@ -97,15 +84,23 @@ open class Module {
     }
 
     /**
-     * When class type are the same , distinguish them by name
+     * If the class type are the same , cause the data lose , Use Method {@link #scopeByName}
      */
-    fun scopeByName(groupName: String, single: () -> Any) {
-        addSingle(groupName, single())
+    fun singleOf(single: () -> Any) {
+        val scopeData = single()
+        addSingle(scopeData::class.java.name, scopeData)
     }
 
-    private fun addSingle(groupName: String, any: Any) {
-        if (getEntry()[groupName] == null) {
-            getEntry()[groupName] = any
+    /**
+     * When class type are the same , distinguish them by name
+     */
+    fun singleOf(name: String, single: () -> Any) {
+        addSingle(name, single())
+    }
+
+    private fun addSingle(name: String, any: Any) {
+        if (getEntry()[name] == null) {
+            getEntry()[name] = any
         }
     }
 
@@ -119,10 +114,6 @@ open class Module {
         return getFactoryEntry()[_createFactory<R>(secondaryTypes, resultType)]?.parameter?.invoke(
             ParametersHolder(parameterList)
         )
-    }
-
-    open fun setParentKey(qualifier: Qualifier<*>?) {
-
     }
 
     /**

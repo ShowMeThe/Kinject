@@ -1,6 +1,9 @@
 package com.show.example
 
 import android.app.Application
+import com.show.kInject.core.Logger
+import com.show.kInject.core.ext.currentScope
+import com.show.kInject.core.initGlobalScope
 import com.show.kInject.core.initScope
 import com.show.kInject.core.module.moduleScope
 
@@ -14,13 +17,9 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        initScope {
-            androidContext(this@MyApp)
-
-            single("12312") { "444444" }
-
-            module(MainActivity::class, moduleScope {
+        Logger.enableLog()
+        initGlobalScope {
+            module {
                 factory<Main,String> { it ->
                     Main(it)
                 }
@@ -32,8 +31,7 @@ class MyApp : Application() {
                 factory<Main,String,Int,Double> { it,it1,it2 ->
                     Main(it,it1,it2)
                 }
-            })
+            }
         }
-
     }
 }

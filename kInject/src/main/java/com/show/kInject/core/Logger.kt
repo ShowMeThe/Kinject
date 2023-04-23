@@ -16,8 +16,9 @@ object Logger {
         enableLog = true
     }
     fun log(any: Any?){
-        if(enableLog)
-        Log.e(defaultTag,"${any}")
+        if(enableLog){
+            Log.e(defaultTag,"${any}")
+        }
     }
 
 }

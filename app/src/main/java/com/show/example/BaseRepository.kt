@@ -1,5 +1,6 @@
 package com.show.example
 
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -16,7 +17,7 @@ open class BaseRepository(var owner: LifecycleOwner?) : LifecycleObserver {
 
     init {
         init(owner)
-        Logger.log("Inject $owner")
+        Log.e("22222","Inject $owner")
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

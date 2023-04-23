@@ -7,19 +7,11 @@ package com.show.kInject.core.qualifier
 * Author: ShowMeThe
 */
 
-open class Qualifier<D> {
-
-    private var key : D? = null
-
-    fun getKey() = key
-
-    fun setKeyName(key:D){
-        this.key = key
-    }
+open class Qualifier<D>(val key : D) {
 
 
     override fun hashCode(): Int {
-        return 31 * getKey().hashCode()
+        return 31 * key.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {

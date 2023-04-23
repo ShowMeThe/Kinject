@@ -1,9 +1,11 @@
 package com.show.example
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
-import com.show.kInject.lifecyleowner.ext.getLifeOwner
+import com.show.kInject.core.ext.currentScope
+import com.show.kInject.core.ext.getScope
+import com.show.kInject.core.ext.inject
 
 
 /**
@@ -14,7 +16,12 @@ import com.show.kInject.lifecyleowner.ext.getLifeOwner
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    val repository by lazy { MainRepository(getLifeOwner(this)) }
+    val repository by lazy { MainRepository(inject(this.currentScope,this.currentScope)) }
 
+
+    fun get(){
+        Log.e("222222","MainViewModel ${this}")
+        repository
+    }
 
 }
