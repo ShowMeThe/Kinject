@@ -27,7 +27,6 @@ open class Module {
     fun getFactoryEntry() = entryFactory
 
 
-
     inline fun <reified R> factory(noinline factory: () -> R?) {
         val factoryInstant = _createFactory<R>(resultType = R::class)
         getFactoryEntry()[factoryInstant] = Definition {
@@ -86,25 +85,29 @@ open class Module {
     /**
      * If the class type are the same , cause the data lose , Use Method {@link #scopeByName}
      */
-    fun singleOf(single: () -> Any) {
+    inline fun <reified T : Any> singleOf(single: () -> T) {
         val scopeData = single()
-        addSingle(scopeData::class.java.name, scopeData)
+        Logger.log("singleOf name = [${scopeData::class.java.name}] scopeData = [$scopeData]")
+        addSingle(T::class.java.name, scopeData)
     }
 
     /**
      * When class type are the same , distinguish them by name
      */
     fun singleOf(name: String, single: () -> Any) {
-        addSingle(name, single())
+        val scopeData = single()
+        Logger.log("singleOf name:[${name}] scopeData:[$scopeData]")
+        addSingle(name, scopeData)
     }
 
-    private fun addSingle(name: String, any: Any) {
+    fun addSingle(name: String, any: Any) {
         if (getEntry()[name] == null) {
             getEntry()[name] = any
         }
     }
 
     fun get(name: String): Any? {
+        Logger.log("get data in module:[$this] name=[$name]")
         return getEntry()[name]
     }
 

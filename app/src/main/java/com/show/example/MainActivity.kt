@@ -3,12 +3,10 @@ package com.show.example
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Lifecycle
 import com.show.kInject.core.Logger
 import com.show.kInject.core.bind
-import com.show.kInject.core.ext.currentScope
-import com.show.kInject.core.ext.factory
-import com.show.kInject.core.ext.inject
-import com.show.kInject.core.ext.singleFactory
+import com.show.kInject.core.ext.*
 import com.show.kInject.core.initScope
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -38,20 +36,21 @@ class MainActivity : BaseActivity<MainViewModel>() {
         }
 
 
+
         btn.setOnClickListener {
-            val main: Main = inject("123")
+            val main: Main by lazy { single() }
             Log.e("22222", "main == $main")
 
-            val main2: Main = singleFactory("12312", 1)
-            Log.e("22222", "main == $main2")
-
-            val main3: Main = singleFactory("12312", 1, 1.0)
-            Log.e("22222", "main == $main3")
-
-            val main4: MainA = factory("123", "12312")
-            Log.e("22222", "main == $main4")
-
-            viewModel.get()
+//            val main2: Main = singleFactory("12312", 1)
+//            Log.e("22222", "main == $main2")
+//
+//            val main3: Main = singleFactory("12312", 1, 1.0)
+//            Log.e("22222", "main == $main3")
+//
+//            val main4: MainA = factory("123", "12312")
+//            Log.e("22222", "main == $main4")
+//
+//            viewModel.get()
         }
 
         btn2.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.show.example
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.show.kInject.core.Logger
 import com.show.kInject.core.ext.currentScope
 import com.show.kInject.core.initGlobalScope
@@ -20,6 +21,8 @@ class MyApp : Application() {
         Logger.enableLog()
         initGlobalScope {
             module {
+                singleOf { Main() }
+
                 factory<Main,String> { it ->
                     Main(it)
                 }
@@ -30,6 +33,10 @@ class MyApp : Application() {
 
                 factory<Main,String,Int,Double> { it,it1,it2 ->
                     Main(it,it1,it2)
+                }
+
+                factory<MainRepository,MainViewModel> {
+                    MainRepository(requireNotNull(it))
                 }
             }
         }

@@ -28,9 +28,12 @@ open class Scope : Closeable {
 
 
 inline fun initScope(name: String, block: Scope.() -> Unit): Scope {
-    val qualifier = StringQualifier(name)
-    val scope = Scope()
-    ScopeComponents.get().addScope(qualifier, scope)
+    var scope = ScopeComponents.getComponent().getScopeOrNull(name)
+    if(scope == null){
+        val qualifier = StringQualifier(name)
+        scope = Scope()
+        ScopeComponents.getComponent().addScope(qualifier, scope)
+    }
     block.invoke(scope)
     Logger.log("initScope name:[${name}],scope:[${scope}]")
     return scope
@@ -39,7 +42,7 @@ inline fun initScope(name: String, block: Scope.() -> Unit): Scope {
 inline fun initGlobalScope(block: GlobalScope.() -> Unit): Scope {
     val qualifier = StringQualifier(ScopeComponents.ANDROID_APPLICATION_SCOPE)
     val scope = GlobalScope.instant
-    ScopeComponents.get().addScope(qualifier, scope)
+    ScopeComponents.getComponent().addScope(qualifier, scope)
     block.invoke(scope)
     Logger.log("initGlobalScope:${scope}")
     return scope
@@ -52,7 +55,7 @@ fun Scope.bind(lifecycle: Lifecycle) {
         override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
             if (event == Lifecycle.Event.ON_DESTROY) {
                 lifecycle.removeObserver(this)
-                ScopeComponents.get().removeScope(this@bind)
+                ScopeComponents.getComponent().removeScope(this@bind)
                 Logger.log("Scope:${this@bind} remove from lifecycle = [${lifecycle}]")
             }
         }
@@ -84,7 +87,7 @@ class ScopeComponents {
             "com.show.kInject.ScopeComponents.ANDROID_APPLICATION_KEY"
 
         private val instant by lazy { ScopeComponents() }
-        fun get() = instant
+        fun getComponent() = instant
     }
 
     fun enableLog() {
@@ -97,17 +100,15 @@ class ScopeComponents {
         "Can not find the scope by name = [$name]"
     }
 
+    fun getScopeOrNull(name: String) = scopes[StringQualifier(name)]
+
     fun addScope(qualifier: StringQualifier, scope: Scope) {
         if (scopes[qualifier] == null) {
             scopes[qualifier] = scope
         }
     }
 
-    fun removeScope(qualifier: StringQualifier) {
-        scopes.remove(qualifier)
-    }
-
-    fun removeScope(scope: Scope) {
+    internal fun removeScope(scope: Scope) {
         val it = scopes.iterator()
         while (it.hasNext()) {
             val pair = it.next()
@@ -118,23 +119,4 @@ class ScopeComponents {
             }
         }
     }
-
-
-//
-//    inline fun <reified T> global(typeName: String = T::class.java.name, single: () -> T) {
-//        GlobalRegister.instant.addEntry(StringQualifier().apply {
-//            setKeyName(typeName)
-//        }, single())
-//    }
-//
-//    /**
-//     * scopeClazz where your want to inject
-//     */
-//    fun <T : Any> module(scopeClazz: T, module: Module) {
-//        ModuleRegister.instant.addEntry(StringQualifier().apply {
-//            setKeyName(scopeClazz.toString())
-//            Logger.log("inject into clazz $scopeClazz")
-//        }, module)
-//    }
-
 }

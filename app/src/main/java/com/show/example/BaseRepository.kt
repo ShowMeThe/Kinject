@@ -1,11 +1,11 @@
 package com.show.example
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.show.kInject.core.Logger
+import com.show.kInject.core.ext.currentScope
+import com.show.kInject.core.ext.inject
+import kotlinx.coroutines.CoroutineScope
 
 
 /**
@@ -13,35 +13,36 @@ import com.show.kInject.core.Logger
  *  2020/6/20
  *  20:40
  */
-open class BaseRepository(var owner: LifecycleOwner?) : LifecycleObserver {
+
+data class Coroutines(
+    val viewModelScope: CoroutineScope? = null,
+    val owner: LifecycleOwner? = null
+)
+
+open class BaseRepository(var viewModel: ViewModel) {
+
+
+    private val owner: LifecycleOwner by lazy { inject(viewModel.currentScope,viewModel.currentScope) }
 
     init {
-        init(owner)
-        Log.e("22222","Inject $owner")
+        init()
+        Log.e(BaseRepository::class.java.name, "Inject $viewModel")
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
-        onClear()
-    }
-
-    private fun init(owner: LifecycleOwner?) {
-        owner?.lifecycle?.addObserver(this)
-    }
-
-
-    /**
-     * 适当使用避免造成内存泄漏
-     */
-    private fun onClear() {
-        owner?.lifecycle?.removeObserver(this)
-        owner = null
+    private fun init() {
+        owner.lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    owner.lifecycle.removeObserver(this)
+                }
+            }
+        })
     }
 
 
-    fun androidScope(scope:LifecycleOwner?.()->Unit){
-        scope.invoke(owner)
-
+    fun androidScope(scope: Coroutines.() -> Unit) {
+        scope.invoke(Coroutines(viewModel.viewModelScope, owner))
     }
+
 
 }

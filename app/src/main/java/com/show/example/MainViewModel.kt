@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.show.kInject.core.ext.currentScope
 import com.show.kInject.core.ext.getScope
 import com.show.kInject.core.ext.inject
+import com.show.kInject.core.ext.singleFactory
 
 
 /**
@@ -16,12 +17,12 @@ import com.show.kInject.core.ext.inject
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    val repository by lazy { MainRepository(inject(this.currentScope,this.currentScope)) }
+    val repository : MainRepository by lazy { singleFactory(this) }
 
 
     fun get(){
         Log.e("222222","MainViewModel ${this}")
-        repository
+        repository.go()
     }
 
 }

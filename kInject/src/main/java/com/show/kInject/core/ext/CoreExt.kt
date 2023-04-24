@@ -11,7 +11,7 @@ import com.show.kInject.core.ScopeComponents
  */
 
 fun getGlobalScope() = ScopeComponents
-    .get().getScope(ScopeComponents.ANDROID_APPLICATION_SCOPE) as GlobalScope
+    .getComponent().getScope(ScopeComponents.ANDROID_APPLICATION_SCOPE) as GlobalScope
 
 fun androidContext(): Application? = getGlobalScope().getModule()
     .get(ScopeComponents.ANDROID_APPLICATION_KEY) as Application?
@@ -28,7 +28,7 @@ inline fun <reified T> singleFactory(vararg parameter: Any?): T {
 }
 
 
-fun getScope(scopeName: String) = ScopeComponents.get().getScope(scopeName)
+fun getScope(scopeName: String) = ScopeComponents.getComponent().getScope(scopeName)
 
 inline fun <reified T> inject(scopeName: String,name:String = T::class.java.name): T {
     return getScope(scopeName).getModule().get(name) as T

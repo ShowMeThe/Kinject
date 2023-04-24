@@ -2,20 +2,20 @@ package com.show.example
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 
 /**
  *  com.show.kinit
  *  2020/6/20
  *  20:40
  */
-class MainRepository(owner: LifecycleOwner?) : BaseRepository(owner) {
+class MainRepository(viewModel: ViewModel) : BaseRepository(viewModel) {
 
-
-    init {
-        Log.e("222222","LifecycleOwner $owner")
+    fun go(){
+        androidScope {
+            Log.e("222222","MainRepository $viewModel")
+        }
     }
-
-
 
 
 }
